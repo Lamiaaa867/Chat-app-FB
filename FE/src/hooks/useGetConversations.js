@@ -11,7 +11,7 @@ const getConverstaions=async()=>{
         const res=await fetch('/api/user/getuser')
         console.log(res)
         const data = await res.json()
-        console.log(data)
+        console.log("data from conversations hook",data)
         if(data.error){
         throw new Error(data.error)
         }

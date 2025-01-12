@@ -13,7 +13,7 @@ const useLogout = () => {
         headers: { "Content-Type": "application/json" },
         });
       const data = await res.json();
-      console.log(data);
+    	console.log("data from logout hook", data)
       if (data.error) {
         toast.error(error.message);
         throw new Error(data.error);

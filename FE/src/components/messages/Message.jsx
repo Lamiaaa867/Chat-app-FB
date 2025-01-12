@@ -1,21 +1,21 @@
 import React from 'react'
 import { useAuthContext } from '../../context/AuthContext.jsx'
 import useConversation from '../../zustand/useConverstion.js'
-import { extractTime } from '../../utils/extractTime.js';
+
 const Message = ({message}) => {
   console.log("your message is " , message)
   const { authUser } = useAuthContext();
+  console.log("your auuuthhhh is " , authUser._id)
   const { selectedConversation } = useConversation();
-
-  const formattedTime = extractTime(message.createdAt);
-
-  const fromMe = message.senderId === authUser.userInstance._id;
+  console.log("your selectedConversationkkkkkk is " , selectedConversation)
+  const fromMe = message?.senderId === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe
-    ? authUser.userInstance.profilePicture
+    ? authUser.profilePicture
     : selectedConversation.profilePicture;
+    console.log("your selectedConversationprofilePicture is " , selectedConversation.profilePicture)
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
-  const shakeClass = message.shouldShake ? "shake" : "";
+  
 
   return (
     <div className={`chat ${chatClassName}`}>
@@ -25,11 +25,11 @@ const Message = ({message}) => {
         </div>
       </div>
       {/* Accessing the 'message' property directly */}
-      <div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2`}>
-        {message.message}
+      <div className={`chat-bubble text-white ${bubbleBgColor} pb-2`}>
+        {message?.message}
       </div>
       <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
-        {message.createdAt}
+        {message?.createdAt}
       </div>
     </div>
   );

@@ -16,11 +16,13 @@ const useSendMessage = () => {
             body: JSON.stringify({message }),
         });
         const data = await res.json();
+        console.log("data from send messages hook", data)
         if (data.error) {
             console.log(data.error)
             throw new Error(data.error)};
 
         setMessages([...messages, data]);
+        //console.log("set messages",  setMessages([...messages, data]))
     } catch (error) {
 
         toast.error(error.message);
@@ -29,6 +31,6 @@ const useSendMessage = () => {
     }
 };
 
-return { sendMessage, loading };
+return { loading,sendMessage };
 };
 export default useSendMessage;

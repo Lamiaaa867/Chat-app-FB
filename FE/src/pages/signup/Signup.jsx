@@ -6,7 +6,7 @@ import {useSignup} from '../../hooks/useSignup.js'
 const SignUp = () => {
 	const [inputs, setInputs] = useState({
 	
-		userName: "",
+		username: "",
 		password: "",
 	
 		gender: "",
@@ -22,7 +22,7 @@ const SignUp = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 	console.log(inputs)
-	await signup(inputs.userName,inputs.password,inputs.gender);
+	await signup(inputs.username,inputs.password,inputs.gender);
 	};
 
 	return (
@@ -42,8 +42,8 @@ const SignUp = () => {
 							type='text'
 							placeholder='johndoe'
 							className='w-full input input-bordered h-10'
-							value={inputs.userName}
-							onChange={(e) => setInputs({ ...inputs, userName: e.target.value })}
+							value={inputs.username}
+							onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
 						/>
 					</div>
 

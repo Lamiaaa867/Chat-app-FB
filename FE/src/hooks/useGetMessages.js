@@ -14,6 +14,7 @@ const useGetMessages = () => {
 			try {
 				const res = await fetch(`/api/message/getMessage?receiverId=${selectedConversation._id}`);
 				const data = await res.json();
+				console.log("data from getmessages hook", data)
 				if (data.error) throw new Error(data.error);
 				setMessages(data);
 			} catch (error) {

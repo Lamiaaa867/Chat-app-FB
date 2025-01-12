@@ -5,20 +5,20 @@ import { useAuthContext } from "../context/AuthContext";
 export const useSignup = () => {
   const [loading, setLoading] = useState(false);
   const {setAuthUser}=useAuthContext()
-  const signup = async (userName, password, gender) => {
+  const signup = async (username, password, gender) => {
   
-    const sucess = handleInputErrors({ userName, password, gender });
+    const sucess = handleInputErrors({ username, password, gender });
     if (!sucess) return;
     setLoading(true);
     try {
         const res=await fetch("/api/auth/signUp",{
             method:"POST",
             headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({  userName,  gender,password }),
+				body: JSON.stringify({  username,password ,gender}),
 			
         })
         const data = await res.json();
-        console.log(data)
+        console.log("data from signp hook", data)
 			if (data.error) {
        
 				throw new Error(data.error);
@@ -35,9 +35,9 @@ setAuthUser(data)
   return { loading, signup };
 };
 
-function handleInputErrors({ userName, password, gender }) {
+function handleInputErrors({ username, password, gender }) {
   
-  if (!userName || !password || !gender) {
+  if (!username || !password || !gender) {
     toast.error("please fill all fields ");
     return false;
   }
