@@ -11,9 +11,9 @@ const useLogout = () => {
       const res = await fetch("/api/auth/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        });
+      });
       const data = await res.json();
-    	console.log("data from logout hook", data)
+
       if (data.error) {
         toast.error(error.message);
         throw new Error(data.error);
@@ -25,9 +25,8 @@ const useLogout = () => {
     } finally {
       setLoading(false);
     }
-    
   };
-  return {loading , logout}
+  return { loading, logout };
 };
 
 export default useLogout;

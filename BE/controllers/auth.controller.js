@@ -4,7 +4,6 @@ import { generateToken } from "../Utils/generateToken.js";
 
 //////////////////////////signup api//////////////////////
 export const signUp = async (req, res, next) => {
-  console.log(req.body);
   const { username, gender, password } = req.body;
 
   const isUserExist = await userModel.findOne({ username });
@@ -15,7 +14,7 @@ export const signUp = async (req, res, next) => {
   const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
   const hashedPass = bcrypt.hashSync(password, +process.env.saltRounds);
   const userInstance = new userModel({
-    username:username,
+    username: username,
     gender,
     password: hashedPass,
     profilePicture: gender === "male" ? boyProfilePic : girlProfilePic,
@@ -24,9 +23,9 @@ export const signUp = async (req, res, next) => {
     await generateToken(userInstance._id, res);
 
     await userInstance.save();
-    return  res.status(201).json({
+    return res.status(201).json({
       _id: userInstance._id,
- 
+
       username: userInstance.username,
       profilePicture: userInstance.profilePicture,
     });
@@ -46,9 +45,9 @@ export const logIn = async (req, res, next) => {
     return res.status(409).json({ error: "Wrong password" });
   }
   await generateToken(isUserExist._id, res);
- return res.status(200).json({
+  return res.status(200).json({
     _id: isUserExist._id,
-   
+
     username: isUserExist.username,
     profilePicture: isUserExist.profilePicture,
   });

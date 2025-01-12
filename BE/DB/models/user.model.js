@@ -13,7 +13,6 @@ const userSchema = new Schema(
       required: true,
     },
 
-    
     profilePicture: {
       type: String,
       default: "",
@@ -21,8 +20,8 @@ const userSchema = new Schema(
 
     gender: {
       type: String,
-      default:"male",
-      enum: ["male", "female",],
+      default: "male",
+      enum: ["male", "female"],
     },
   },
   {
