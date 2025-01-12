@@ -14,7 +14,7 @@ const Message = ({message}) => {
     ? authUser.profilePicture
     : selectedConversation.profilePicture;
     console.log("your selectedConversationprofilePicture is " , selectedConversation.profilePicture)
-  const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+  const bubbleBgColor = fromMe ? "" : "bg-blue-500";
   
 
   return (
