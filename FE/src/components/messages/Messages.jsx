@@ -5,6 +5,7 @@ import Message from "./Message.jsx";
 import useListenMessages from "../../hooks/useListenMessages.js";
 const Messages = () => {
 const {messages,loading}= useGetMessages();
+//console.log("messages from messages component" , messages)
 useListenMessages()
 const lastMessageRef= useRef()
 

@@ -1,7 +1,22 @@
 import { useState } from "react";
 import useConversation from "../zustand/useConverstion";
 import toast from "react-hot-toast";
+import { useSocketContext } from "../context/SocketContext";
+
+
+import {
+
+  decryptMessage,
+  deriveSharedKey,
+  encryptMessage,
+} from "../utils/decryption";
+
+
+
+
 const useSendMessage = () => {
+  const { socket } = useSocketContext();
+ 
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
@@ -19,12 +34,17 @@ const useSendMessage = () => {
         }
       );
       const data = await res.json();
-
+     
+       // Emit the newMessage event via socket
+       socket?.emit("sendMessage",JSON.stringify(data));
+      
       if (data.error) {
         console.log(data.error);
         throw new Error(data.error);
       }
-
+      data.message= decryptMessage(data.message, data.sharedKey);
+      
+      
       setMessages([...messages, data]);
     } catch (error) {
       toast.error(error.message);

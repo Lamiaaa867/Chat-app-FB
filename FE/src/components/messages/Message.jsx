@@ -1,6 +1,9 @@
 import React from 'react'
 import { useAuthContext } from '../../context/AuthContext.jsx'
 import useConversation from '../../zustand/useConverstion.js'
+import { use } from 'react';
+
+
 
 const Message = ({message}) => {
 
@@ -13,9 +16,7 @@ const Message = ({message}) => {
   const profilePic = fromMe
     ? authUser.profilePicture
     : selectedConversation.profilePicture;
-     const bubbleBgColor = fromMe ? "bg-blue-500" : "";
-  
-
+     const bubbleBgColor = fromMe ? "bg-blue-500" : "";  
   return (
     <div className={`chat ${chatClassName}`}>
     <div className='chat-image avatar'>
@@ -24,7 +25,7 @@ const Message = ({message}) => {
       </div>
     </div>
     <div className={`chat-bubble text-white ${shakeClass} ${bubbleBgColor} pb-2`}>{message.message}</div>
-    <div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{message.createdAt}</div>
+   
   </div>
   );
 };

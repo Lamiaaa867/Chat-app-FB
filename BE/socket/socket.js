@@ -17,20 +17,36 @@ export const getReceiverSocketId = (receiverId) => {
 };
 
 const userSocketMap = {}; // {userId: socketId}
+const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
-
+ 
   const userId = socket.handshake.query.userId;
+  onlineUsers.set(socket.id, userId);
+  io.emit("onlineUsers", Array.from(onlineUsers.values()));
   if (userId != "undefined") userSocketMap[userId] = socket.id;
-
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-    delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  socket?.on("sendMessage",(data)=>{
+    const messageObject = JSON.parse(data);
+   const receiverIdSocketId = getReceiverSocketId( messageObject.receiverId)
+   io.to(receiverIdSocketId).emit("newMessage",messageObject)
+    console.log("Decoded Message Object:", messageObject);
   });
+  
+
+  socket.emit("getOnlineUsers", Object.keys(userSocketMap));
+  // Remove user from the online users list when disconnected
+  socket.on("disconnect", () => {
+    console.log("a user disconnected", socket.id);
+  const userId = onlineUsers.get(socket.id);
+ 
+
+  onlineUsers.delete(socket.id);
+
+  // Broadcast updated list of online users
+  io.emit("onlineUsers", Array.from(onlineUsers.values()));
 });
 
+
+})
 export { app, io, server };

@@ -1,16 +1,23 @@
 import { BsSend } from "react-icons/bs";
 import { useState } from "react";
-
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import useSendMessage from "../../hooks/useSendMessage.js";
+import { deriveSharedKey, encryptMessage } from "../../utils/decryption.js";
+import useConversation from "../../zustand/useConverstion.js";
 const MessageInput = () => {
 	const [message, setMessage] = useState("");
 	const { loading, sendMessage } = useSendMessage();
-
+	const { authUser } = useAuthContext();
+	const {selectedConversation}= useConversation()
+	
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!message) return;
-		
-	 await sendMessage(message);
+     const SharedKey= deriveSharedKey(authUser._id,selectedConversation._id)
+	
+    const encryptedMessage=encryptMessage(message,SharedKey)
+	
+	 await sendMessage(encryptedMessage);
 		
 		setMessage("");
 		

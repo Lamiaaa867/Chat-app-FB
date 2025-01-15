@@ -7,5 +7,10 @@ const useConversation = create((set) => ({
   setMessages: (messages) => {
     set({ messages });
   },
+
+  messages_text: [],
+  setMessages_text: (messages_text) => {
+    set({ messages_text });
+  },
 }));
 export default useConversation;

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { messages, setMessages, selectedConversation ,setMessages_text,messages_text} = useConversation();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -17,6 +17,7 @@ const useGetMessages = () => {
 
         if (data.error) throw new Error(data.error);
         setMessages(data);
+        setMessages_text(data.message)
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -27,6 +28,6 @@ const useGetMessages = () => {
     if (selectedConversation?._id) getMessages();
   }, [selectedConversation?._id, setMessages]);
 
-  return { messages, loading };
+  return { messages, loading ,messages_text};
 };
 export default useGetMessages;

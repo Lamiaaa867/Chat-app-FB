@@ -2,10 +2,15 @@ import Conversation from "../DB/models/converstaion.model.js";
 import Message from "../DB/models/message.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 
+import { decryptMessage ,encryptMessage} from "../Utils/secureMessages.js";
+import { deriveSharedKey } from "../Utils/generateSymmetricKey.js";
 export const sendMessage = async (req, res) => {
+  const senderId = req.user._id;
   const { receiverId } = req.query;
   const { message } = req.body;
-  const senderId = req.user._id;
+
+  const sharedKey = deriveSharedKey( senderId, receiverId)
+
 
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, receiverId] },
@@ -20,7 +25,8 @@ export const sendMessage = async (req, res) => {
   const newMessage = new Message({
     senderId,
     receiverId: receiverId,
-    message,
+    message:message,
+    sharedKey:sharedKey
   });
 
   if (newMessage) {
@@ -30,22 +36,27 @@ export const sendMessage = async (req, res) => {
   // this will run in parallel
   await Promise.all([conversation.save(), newMessage.save()]);
 
-  const receiverSocketId = getReceiverSocketId(receiverId);
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("newMessage", newMessage);
-  }
   res.status(201).json(newMessage);
 };
 
 export const getMessages = async (req, res) => {
   const { receiverId } = req.query;
+
   const senderId = req.user._id;
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, receiverId] },
   }).populate("messages");
+  
   if (!conversation) {
     return res.status(200).json([]);
   }
+  
+  const decryptedMessages = conversation.messages.map((message) => {
+    return {
+      ...message.toObject(), // Ensure proper handling of Mongoose document
+      message: decryptMessage(message.message, message.sharedKey), // Decrypt the message text
+    };
+  });
 
-  return res.status(200).json(conversation.messages);
+  return res.status(200).json(decryptedMessages);
 };
