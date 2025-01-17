@@ -3,17 +3,13 @@ import useConversation from "../zustand/useConverstion";
 import toast from "react-hot-toast";
 import { useSocketContext } from "../context/SocketContext";
 
-
 import {
-decryptMessage,deriveSharedKey ,encryptMessage
+  decryptMessage,
 } from "../utils/decryption";
-
-
-
 
 const useSendMessage = () => {
   const { socket } = useSocketContext();
- 
+
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
@@ -31,18 +27,19 @@ const useSendMessage = () => {
         }
       );
       const data = await res.json();
-     
-       // Emit the newMessage event via socket
-       socket?.emit("sendMessage",JSON.stringify(data));
-      
+
+      // Emit the newMessage event via socket
+      socket?.emit("sendMessage", JSON.stringify(data));
+
       if (data.error) {
         console.log(data.error);
         throw new Error(data.error);
       }
-     const sharedKey= sessionStorage.getItem(`${selectedConversation.username}_key`)
-      data.message= decryptMessage(data.message, sharedKey);
-      
-      
+      const sharedKey = sessionStorage.getItem(
+        `${selectedConversation.username}_key`
+      );
+      data.message = decryptMessage(data.message, sharedKey);
+
       setMessages([...messages, data]);
     } catch (error) {
       toast.error(error.message);

@@ -7,21 +7,18 @@ import { useAuthContext } from "../context/AuthContext";
 
 const useListenMessages = () => {
   const { socket } = useSocketContext();
-  const {authUser}= useAuthContext()
-  const { messages, setMessages ,selectedConversation} = useConversation();
+  const { authUser } = useAuthContext();
+  const { messages, setMessages, selectedConversation } = useConversation();
 
   useEffect(() => {
-   
     socket?.on("newMessage", (newMessage) => {
-  
-        newMessage.shouldShake = true;
-const sharedKey= deriveSharedKey(selectedConversation._id,authUser._id)
-newMessage.message=decryptMessage (newMessage.message,sharedKey)
+      newMessage.shouldShake = true;
+      const sharedKey = deriveSharedKey(selectedConversation._id, authUser._id);
+      newMessage.message = decryptMessage(newMessage.message, sharedKey);
       setMessages([...messages, newMessage]);
     });
-  
 
     return () => socket?.off("newMessage");
-  }, [socket, setMessages, messages,selectedConversation]);
+  }, [socket, setMessages, messages, selectedConversation]);
 };
 export default useListenMessages;

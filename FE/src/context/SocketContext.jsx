@@ -24,15 +24,12 @@ export const SocketContextProvider = ({ children }) => {
 
       setSocket(socket);
 
-      // Listen for the online users list from the server
+    
       socket.on("onlineUsers", (users) => {
         setOnlineUsers(users);
       });
 
-      // Notify the server that the user is online
-      socket.emit("userConnected", authUser._id);
-
-      // Cleanup on unmount or authUser change
+   
       return () => {
         socket.emit("userDisconnected", authUser._id);
         socket.close();
