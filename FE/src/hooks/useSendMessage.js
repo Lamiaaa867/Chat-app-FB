@@ -5,10 +5,7 @@ import { useSocketContext } from "../context/SocketContext";
 
 
 import {
-
-  decryptMessage,
-  deriveSharedKey,
-  encryptMessage,
+decryptMessage,deriveSharedKey ,encryptMessage
 } from "../utils/decryption";
 
 
@@ -42,7 +39,8 @@ const useSendMessage = () => {
         console.log(data.error);
         throw new Error(data.error);
       }
-      data.message= decryptMessage(data.message, data.sharedKey);
+     const sharedKey= sessionStorage.getItem(`${selectedConversation.username}_key`)
+      data.message= decryptMessage(data.message, sharedKey);
       
       
       setMessages([...messages, data]);

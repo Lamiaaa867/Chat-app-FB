@@ -3,7 +3,9 @@ import CryptoJS from "crypto-js";
 
 // Shared Key Generation (Example: XOR-based)
 export const deriveSharedKey = (senderKey, receiverKey) => {
-  return CryptoJS.SHA256(senderKey + receiverKey).toString(CryptoJS.enc.Hex);
+  const [key1, key2] = [senderKey, receiverKey].sort();
+  // Combine the sorted keys and hash them
+  return CryptoJS.SHA256(key1 + key2).toString(CryptoJS.enc.Hex);
 };
 
 // Encrypt a message

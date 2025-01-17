@@ -14,8 +14,9 @@ export const SocketContextProvider = ({ children }) => {
   const { authUser } = useAuthContext();
 
   useEffect(() => {
+    const BACKPORT = import.meta.env.VITE_BACKPORT ;
     if (authUser) {
-      const socket = io("http://localhost:5000", {
+      const socket = io(`http://127.0.0.1:${BACKPORT}`, {
         query: {
           userId: authUser._id,
         },

@@ -1,16 +1,11 @@
 import Conversation from "../DB/models/converstaion.model.js";
 import Message from "../DB/models/message.model.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
-
-import { decryptMessage ,encryptMessage} from "../Utils/secureMessages.js";
+import { decryptMessage} from "../Utils/secureMessages.js";
 import { deriveSharedKey } from "../Utils/generateSymmetricKey.js";
 export const sendMessage = async (req, res) => {
   const senderId = req.user._id;
   const { receiverId } = req.query;
   const { message } = req.body;
-
-  const sharedKey = deriveSharedKey( senderId, receiverId)
-
 
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, receiverId] },
@@ -26,7 +21,7 @@ export const sendMessage = async (req, res) => {
     senderId,
     receiverId: receiverId,
     message:message,
-    sharedKey:sharedKey
+   
   });
 
   if (newMessage) {
@@ -51,10 +46,12 @@ export const getMessages = async (req, res) => {
     return res.status(200).json([]);
   }
   
+
+  const sharedKey = deriveSharedKey( receiverId, senderId)
   const decryptedMessages = conversation.messages.map((message) => {
     return {
       ...message.toObject(), // Ensure proper handling of Mongoose document
-      message: decryptMessage(message.message, message.sharedKey), // Decrypt the message text
+      message: decryptMessage(message.message, sharedKey), // Decrypt the message text
     };
   });
 

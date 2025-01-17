@@ -2,10 +2,12 @@ import { useEffect } from "react";
 
 import { useSocketContext } from "../context/SocketContext";
 import useConversation from "../zustand/useConverstion";
-import { decryptMessage } from "../utils/decryption";
+import { decryptMessage, deriveSharedKey } from "../utils/decryption";
+import { useAuthContext } from "../context/AuthContext";
 
 const useListenMessages = () => {
   const { socket } = useSocketContext();
+  const {authUser}= useAuthContext()
   const { messages, setMessages ,selectedConversation} = useConversation();
 
   useEffect(() => {
@@ -13,8 +15,8 @@ const useListenMessages = () => {
     socket?.on("newMessage", (newMessage) => {
   
         newMessage.shouldShake = true;
-
-newMessage.message=decryptMessage (newMessage.message,newMessage.sharedKey)
+const sharedKey= deriveSharedKey(selectedConversation._id,authUser._id)
+newMessage.message=decryptMessage (newMessage.message,sharedKey)
       setMessages([...messages, newMessage]);
     });
   

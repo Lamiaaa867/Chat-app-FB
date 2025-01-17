@@ -9,13 +9,14 @@ const MessageInput = () => {
 	const { loading, sendMessage } = useSendMessage();
 	const { authUser } = useAuthContext();
 	const {selectedConversation}= useConversation()
-	
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!message) return;
-     const SharedKey= deriveSharedKey(authUser._id,selectedConversation._id)
-	
-    const encryptedMessage=encryptMessage(message,SharedKey)
+     const sharedKey= deriveSharedKey(authUser._id,selectedConversation._id)
+	 sessionStorage.setItem(`${selectedConversation.username}_key`, sharedKey);
+
+    const encryptedMessage=encryptMessage(message,sharedKey)
 	
 	 await sendMessage(encryptedMessage);
 		

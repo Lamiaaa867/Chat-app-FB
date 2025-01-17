@@ -3,7 +3,7 @@ import useConversation from "../zustand/useConverstion.js";
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
   const { selectedConversation, setSelectedConversation } = useConversation();
-  //console.log("selected conversation",selectedConversation)
+
   const { onlineUsers } = useSocketContext();
   const isOnline = onlineUsers.includes(conversation._id);
   const isSelected = selectedConversation?._id === conversation._id;

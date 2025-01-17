@@ -1,13 +1,14 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
-
+import { config } from "dotenv";
+config()
 const app = express();
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: [`http://localhost:${process.env.FEport}`],
     methods: ["GET", "POST"],
   },
 });
@@ -30,7 +31,7 @@ io.on("connection", (socket) => {
     const messageObject = JSON.parse(data);
    const receiverIdSocketId = getReceiverSocketId( messageObject.receiverId)
    io.to(receiverIdSocketId).emit("newMessage",messageObject)
-    console.log("Decoded Message Object:", messageObject);
+    
   });
   
 
